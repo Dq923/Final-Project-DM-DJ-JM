@@ -40,7 +40,7 @@ public class ConsoleService {
     }
 
     // READ BY ID
-    public Console findShirtById(int id){
+    public Console findConsoleById(int id){
         Optional<Console> console = consoleRepository.findById(id);
 
         return console.orElse(null);
@@ -70,8 +70,8 @@ public class ConsoleService {
     }
 
     // DELETE BY ID
-    public void deleteShirt(int id){
-        Optional<Console> console = consoleRepository.findById(id); // check if the shirt exists
+    public void deleteConsole(int id){
+        Optional<Console> console = consoleRepository.findById(id);
 
         if(console.isEmpty())
             throw new IllegalArgumentException("Console cannot be found by the ID provided.");
