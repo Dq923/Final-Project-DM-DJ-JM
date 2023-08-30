@@ -1,6 +1,7 @@
 package com.company.gamestore.repository;
 
 import com.company.gamestore.model.Console;
+import com.company.gamestore.service.ServiceLayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +16,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class ConsoleRepositoryTest {
     @Autowired
-    ConsoleRepository consoleRepository;
+    ServiceLayer serviceLayer;
 
     private Console console;
 
     // Create a dummy console to test routes to run before each test
     @BeforeEach
     public void setUp() {
-        consoleRepository.deleteAll();
+        serviceLayer.deleteAllConsoles();
 
         // Fill with dummy data
         console = new Console();
@@ -35,34 +36,34 @@ public class ConsoleRepositoryTest {
         console.setQuantity(20);
 
         // Save to repository
-        console = consoleRepository.save(console);
+        console = serviceLayer.saveConsole(console);
     }
 
     @Test
     public void shouldAddConsole() {
-        Optional<Console> addConsole = consoleRepository.findById(console.getId());
+        Optional<Console> addConsole = serviceLayer.findConsoleById(console.getId());
         assertEquals(addConsole.get(), console);
     }
 
     @Test
     public void shouldGetConsoleById() {
-        Console getConsoleById = consoleRepository.findById(console.getId()).orElse(null);
+        Console getConsoleById = serviceLayer.findConsoleById(console.getId()).orElse(null);
         assertEquals(console, getConsoleById);
     }
 
     @Test
     public void shouldUpdateConsole() {
         console.setMemoryAmount("1TB");
-        consoleRepository.save(console);
+        serviceLayer.saveConsole(console);
 
-        Optional<Console> updatedConsole = consoleRepository.findById(console.getId());
+        Optional<Console> updatedConsole = serviceLayer.findConsoleById(console.getId());
         assertEquals(updatedConsole.get(), console);
     }
 
     @Test
     public void shouldDeleteConsole() {
-        consoleRepository.deleteById(console.getId());
-        Optional<Console> deletedConsole = consoleRepository.findById(console.getId());
+        serviceLayer.deleteConsole(console.getId());
+        Optional<Console> deletedConsole = serviceLayer.findConsoleById(console.getId());
         assertFalse(deletedConsole.isPresent());
     }
 
@@ -77,7 +78,7 @@ public class ConsoleRepositoryTest {
         BigDecimal price1 = new BigDecimal("299.99");
         console1.setPrice(price1);
         console1.setQuantity(15);
-        consoleRepository.save(console1);
+        serviceLayer.saveConsole(console1);
 
         Console console2 = new Console();
         console2.setModel("Model W");
@@ -87,10 +88,10 @@ public class ConsoleRepositoryTest {
         BigDecimal price2 = new BigDecimal("599.99");
         console2.setPrice(price2);
         console2.setQuantity(10);
-        consoleRepository.save(console2);
+        serviceLayer.saveConsole(console2);
 
         // Call the method to get consoles by manufacturer
-        List<Console> microsoftConsoles = consoleRepository.findAllConsoleByManufacturer("Microsoft");
+        List<Console> microsoftConsoles = serviceLayer.findConsolesByManufacturers("Microsoft");
 
         // Assert the size and contents of the returned list
         assertEquals(3, microsoftConsoles.size());

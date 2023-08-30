@@ -1,8 +1,7 @@
 package com.company.gamestore.controller;
 
 import com.company.gamestore.model.Console;
-import com.company.gamestore.model.Tshirt;
-import com.company.gamestore.repository.ConsoleRepository;
+import com.company.gamestore.service.ServiceLayer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,10 +14,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ConsoleController.class)
@@ -27,12 +22,13 @@ public class ConsoleControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    ConsoleRepository consoleRepository;
+    ServiceLayer serviceLayer;
 
     private ObjectMapper mapper = new ObjectMapper();
 
     // Create a testing console before testing
     Console console = new Console();
+
     @BeforeEach
     public void setUp() {
         console.setModel("Model X");
@@ -68,7 +64,7 @@ public class ConsoleControllerTest {
     @Test
     public void shouldGetConsoleById() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/consoles/{id}",1))
+                        .get("/consoles/{id}", 1))
                 .andExpect(status().isOk());
     }
 
@@ -76,7 +72,7 @@ public class ConsoleControllerTest {
     @Test
     public void shouldUpdateConsole() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/console/{id}",1)
+                        .put("/console/{id}", 1)
                         .content(mapper.writeValueAsString(console))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -86,7 +82,7 @@ public class ConsoleControllerTest {
     @Test
     public void shouldDeleteConsole() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/consoles/{id}",1))
+                        .delete("/consoles/{id}", 1))
                 .andExpect(status().isNoContent());
     }
 

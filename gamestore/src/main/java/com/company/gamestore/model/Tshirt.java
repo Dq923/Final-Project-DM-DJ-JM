@@ -75,7 +75,10 @@ public class Tshirt implements Serializable {
         this.quantity = quantity;
     }
 
-    public Tshirt(){};
+    public Tshirt() {
+    }
+
+    ;
 
     public Tshirt(Integer id, String size, String color, String description, BigDecimal price, Integer quantity) {
         this.id = id;

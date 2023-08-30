@@ -12,7 +12,7 @@ import java.util.Objects;
 @Table(name = "game")
 public class Game implements Serializable {
     @Id
-    @Column(name="game_id")
+    @Column(name = "game_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer gameId;
 

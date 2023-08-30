@@ -3,7 +3,6 @@ package com.company.gamestore.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -16,20 +15,11 @@ public class Invoice implements Serializable {
     @Column(name = "invoice_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer invoiceId;
-
-    @NotEmpty(message = "You must input a name.")
     private String name;
-
-    @NotEmpty(message = "You must input a street address")
     private String street;
-
-    @NotEmpty(message = "You must input a city")
     private String city;
-
-    @NotEmpty(message = "You must input the 2-character code for your state. Ex: ")
     private String state;
     private String zipcode;
-
     @Column(name = "item_type")
     private String itemType;
 

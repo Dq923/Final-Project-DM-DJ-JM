@@ -1,8 +1,6 @@
 package com.company.gamestore.viewmodel;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -28,7 +26,7 @@ public class InvoiceViewModel {
     private BigDecimal unitPrice;
     @NotEmpty(message = "You must provide a quantity.")
     private Integer quantity;
-
+    // consider other jsr 303 annotations for numbers such as min/max
     private BigDecimal subtotal;
 
     private BigDecimal tax;

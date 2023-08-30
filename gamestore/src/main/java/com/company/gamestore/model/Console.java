@@ -2,12 +2,12 @@ package com.company.gamestore.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -32,7 +32,7 @@ public class Console implements Serializable {
     private String processor;
 
     @NotNull
-    @Digits(integer=5, fraction=2)
+    @Digits(integer = 5, fraction = 2)
     private BigDecimal price;
 
     @NotNull

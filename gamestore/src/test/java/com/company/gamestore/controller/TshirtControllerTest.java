@@ -1,22 +1,16 @@
 package com.company.gamestore.controller;
 
-import ch.qos.logback.core.encoder.EchoEncoder;
 import com.company.gamestore.model.Tshirt;
-import com.company.gamestore.repository.TshirtRepository;
+import com.company.gamestore.service.ServiceLayer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.math.BigDecimal;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,12 +22,13 @@ class TshirtControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    TshirtRepository tshirtRepository;
+    ServiceLayer serviceLayer;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
-    void setUp() {}
+    void setUp() {
+    }
 
     @Test
     public void shouldGetAllTshirtsAndReturnStatusOK() throws Exception {

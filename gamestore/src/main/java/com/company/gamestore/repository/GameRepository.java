@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface GameRepository extends JpaRepository<Game,Integer> {
+public interface GameRepository extends JpaRepository<Game, Integer> {
     // CRUD already exists
 
     // Custom Queries
@@ -17,6 +17,6 @@ public interface GameRepository extends JpaRepository<Game,Integer> {
 
     public List<Game> findAllByEsrbRating(String esrbRating);
 
-    public Optional<Game> findGameByTitle(String title);
+    public List<Game> findGamesByTitle(String title);
 
 }

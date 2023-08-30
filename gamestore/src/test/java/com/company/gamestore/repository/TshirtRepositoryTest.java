@@ -1,6 +1,7 @@
 package com.company.gamestore.repository;
 
 import com.company.gamestore.model.Tshirt;
+import com.company.gamestore.service.ServiceLayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,17 +11,17 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class TshirtRepositoryTest {
 
     @Autowired
-    TshirtRepository tshirtRepository;
+    ServiceLayer serviceLayer;
 
     @BeforeEach
     void setUp() throws Exception {
-        tshirtRepository.deleteAll();
+        serviceLayer.deleteAllShirts();
 
         Tshirt tshirt1 = new Tshirt();
         tshirt1.setId(1);
@@ -30,7 +31,7 @@ public class TshirtRepositoryTest {
         tshirt1.setPrice(BigDecimal.valueOf(19.99));
         tshirt1.setQuantity(20);
 
-        tshirtRepository.save(tshirt1);
+        serviceLayer.saveTshirt(tshirt1);
 
         Tshirt tshirt2 = new Tshirt();
         tshirt2.setId(2);
@@ -40,7 +41,7 @@ public class TshirtRepositoryTest {
         tshirt2.setPrice(BigDecimal.valueOf(29.99));
         tshirt2.setQuantity(20);
 
-        tshirtRepository.save(tshirt2);
+        serviceLayer.saveTshirt(tshirt2);
 
 
         Tshirt tshirt3 = new Tshirt();
@@ -51,13 +52,13 @@ public class TshirtRepositoryTest {
         tshirt3.setPrice(BigDecimal.valueOf(9.99));
         tshirt3.setQuantity(5);
 
-        tshirtRepository.save(tshirt3);
+        serviceLayer.saveTshirt(tshirt3);
     }
 
     // GET all T-Shirts
     @Test
     public void getAllTshirts() throws Exception {
-        List<Tshirt> tshirts = tshirtRepository.findAll();
+        List<Tshirt> tshirts = serviceLayer.findAllShirts();
         assertEquals(tshirts.size(), 3);
     }
 
@@ -68,14 +69,14 @@ public class TshirtRepositoryTest {
         Tshirt tshirtA = new Tshirt();
         tshirtA.setColor("blue");
         // HAD to add these in order for test to pass, Exception thrown when fields are null
-        tshirtA.setDescription("");
+        tshirtA.setDescription("description");
         tshirtA.setSize("large");
         tshirtA.setPrice(new BigDecimal("5.00"));
         tshirtA.setQuantity(2);
 
-        tshirtRepository.save(tshirtA);
+        serviceLayer.saveTshirt(tshirtA);
 
-        Optional<Tshirt> tshirtB = tshirtRepository.findById(tshirtA.getId());
+        Optional<Tshirt> tshirtB = serviceLayer.findShirtById(tshirtA.getId());
 
         assertEquals(tshirtB.get(), tshirtA);
 
@@ -84,8 +85,8 @@ public class TshirtRepositoryTest {
     // GET all T-Shirts By Color
     @Test
     public void getTshirtsByColor() throws Exception {
-        List<Tshirt> blackTshirts = tshirtRepository.findTshirtByColor("black");
-        List<Tshirt> tshirts = tshirtRepository.findTshirtByColor("Black");
+        List<Tshirt> blackTshirts = serviceLayer.findShirtByColor("black");
+        List<Tshirt> tshirts = serviceLayer.findShirtByColor("Black");
 
         assertEquals(tshirts, blackTshirts);
     }
@@ -93,8 +94,8 @@ public class TshirtRepositoryTest {
     // Get all T-Shirts By Size
     @Test
     public void getTshirtsBySize() throws Exception {
-        List<Tshirt> smallTshirts = tshirtRepository.findTshirtBySize("small");
-        List<Tshirt> tshirts = tshirtRepository.findTshirtBySize("Small");
+        List<Tshirt> smallTshirts = serviceLayer.findShirtBySize("small");
+        List<Tshirt> tshirts = serviceLayer.findShirtBySize("Small");
 
         assertEquals(smallTshirts, tshirts);
     }
@@ -106,14 +107,14 @@ public class TshirtRepositoryTest {
         Tshirt tshirt = new Tshirt();
         // HAD to add these in order for test to pass, Exception thrown when fields are null
         tshirt.setColor("purple");
-        tshirt.setDescription("");
+        tshirt.setDescription("description");
         tshirt.setSize("large");
         tshirt.setPrice(new BigDecimal("5.00"));
         tshirt.setQuantity(2);
 
-        tshirtRepository.save(tshirt);
+        serviceLayer.saveTshirt(tshirt);
 
-        Optional<Tshirt> tshirtA = tshirtRepository.findById(tshirt.getId());
+        Optional<Tshirt> tshirtA = serviceLayer.findShirtById(tshirt.getId());
 
         assertEquals(tshirtA.get(), tshirt);
     }
@@ -123,17 +124,17 @@ public class TshirtRepositoryTest {
     public void updateTshirt() throws Exception {
         Tshirt tshirt = new Tshirt();
         tshirt.setColor("purple");
-        tshirt.setDescription("");
+        tshirt.setDescription("description");
         tshirt.setSize("large");
         tshirt.setPrice(new BigDecimal("5.00"));
         tshirt.setQuantity(2);
-        tshirtRepository.save(tshirt);
+        serviceLayer.saveTshirt(tshirt);
 
         tshirt.setColor("blue");
 
-        tshirtRepository.save(tshirt);
+        serviceLayer.saveTshirt(tshirt);
 
-        Optional<Tshirt> tshirtA = tshirtRepository.findById(tshirt.getId());
+        Optional<Tshirt> tshirtA = serviceLayer.findShirtById(tshirt.getId());
 
         assertEquals(tshirtA.get(), tshirt);
     }
@@ -144,14 +145,14 @@ public class TshirtRepositoryTest {
     public void deleteTshirt() throws Exception {
         Tshirt tshirt = new Tshirt();
         tshirt.setColor("purple");
-        tshirt.setDescription("");
+        tshirt.setDescription("description");
         tshirt.setSize("large");
         tshirt.setPrice(new BigDecimal("5.00"));
         tshirt.setQuantity(2);
-        tshirtRepository.save(tshirt);
+        serviceLayer.saveTshirt(tshirt);
 
-        tshirtRepository.deleteById(tshirt.getId());
+        serviceLayer.deleteShirt(tshirt.getId());
 
-        assertEquals(tshirtRepository.findById(tshirt.getId()), Optional.empty());
+        assertEquals(serviceLayer.findShirtById(tshirt.getId()), Optional.empty());
     }
 }

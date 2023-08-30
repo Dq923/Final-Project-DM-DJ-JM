@@ -10,7 +10,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
 public class GameRepositoryTest {
@@ -19,12 +20,12 @@ public class GameRepositoryTest {
     GameRepository gameRepo;
 
     @BeforeEach
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         gameRepo.deleteAll();
     }
 
     @Test
-    public void shouldAddGame(){
+    public void shouldAddGame() {
         // Arrange
         Game game = new Game();
 
@@ -45,7 +46,7 @@ public class GameRepositoryTest {
     }
 
     @Test
-    public void shouldGetAllGames(){
+    public void shouldGetAllGames() {
         // Add a Game - in case it's empty
         Game game = new Game();
         game.setTitle("The Elder Scrolls VI");
@@ -71,11 +72,11 @@ public class GameRepositoryTest {
 
         List<Game> gameList = gameRepo.findAll();
 
-        assertEquals(gameList.size(),2);
+        assertEquals(gameList.size(), 2);
     }
 
     @Test
-    public void shouldGetGameById(){
+    public void shouldGetGameById() {
         // Arrange
         Game game = new Game();
         game.setTitle("The Elder Scrolls VI");
@@ -95,7 +96,7 @@ public class GameRepositoryTest {
     }
 
     @Test
-    public void shouldUpdateGameRecord(){
+    public void shouldUpdateGameRecord() {
         // Arrange - set up Game record
         Game game = new Game();
         game.setTitle("The Elder Scrolls VI");
@@ -120,7 +121,7 @@ public class GameRepositoryTest {
     }
 
     @Test
-    public void shouldDeleteGameRecord(){
+    public void shouldDeleteGameRecord() {
         // Arrange
         Game game = new Game();
         game.setTitle("The Elder Scrolls VI");
@@ -180,12 +181,12 @@ public class GameRepositoryTest {
         List<Game> games = gameRepo.findAllByStudio("Bethesda Game Studios");
 
         // Assert
-        assertEquals(games.size(),2);
+        assertEquals(games.size(), 2);
 
     }
 
     @Test
-    public void shouldReturnAllGamesWithSameRating(){
+    public void shouldReturnAllGamesWithSameRating() {
         // Arrange - add a game
         Game game = new Game();
         game.setTitle("The Elder Scrolls VI");
@@ -224,7 +225,7 @@ public class GameRepositoryTest {
     }
 
     @Test
-    public void shouldReturnAGameByTitle(){
+    public void shouldReturnAGameByTitle() {
         // Arrange
         Game game3 = new Game();
         game3.setTitle("Minecraft");
@@ -236,9 +237,9 @@ public class GameRepositoryTest {
         game3 = gameRepo.save(game3);
 
         // Act
-        Optional<Game> gm = gameRepo.findGameByTitle("Minecraft");
+        List<Game> gm = gameRepo.findGamesByTitle("Minecraft");
 
         // Assert
-        assertEquals(gm.get(), game3);
+        assertEquals(gm.size(), 1);
     }
 }

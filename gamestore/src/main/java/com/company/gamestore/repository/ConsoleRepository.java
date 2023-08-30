@@ -10,9 +10,13 @@ import java.util.Optional;
 @Repository
 public interface ConsoleRepository extends JpaRepository<Console, Integer> {
     Console save(Console console);
+
     Optional<Console> findById(Integer id);
+
     Console findConsoleById(int id);
+
     //    List<Console> findAllConsoles();
     void deleteConsoleById(int id);
+
     List<Console> findAllConsoleByManufacturer(String manufacturer);
 }
