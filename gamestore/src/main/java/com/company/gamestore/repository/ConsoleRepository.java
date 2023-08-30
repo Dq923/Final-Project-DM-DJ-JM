@@ -15,7 +15,6 @@ public interface ConsoleRepository extends JpaRepository<Console, Integer> {
 
     Console findConsoleById(int id);
 
-    //    List<Console> findAllConsoles();
     void deleteConsoleById(int id);
 
     List<Console> findAllConsoleByManufacturer(String manufacturer);
