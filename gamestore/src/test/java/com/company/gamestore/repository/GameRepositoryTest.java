@@ -1,6 +1,7 @@
 package com.company.gamestore.repository;
 
 import com.company.gamestore.model.Game;
+import com.company.gamestore.service.ServiceLayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,18 +11,17 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class GameRepositoryTest {
 
     @Autowired
-    GameRepository gameRepo;
+    ServiceLayer serviceLayer;
 
     @BeforeEach
     public void setUp() throws Exception {
-        gameRepo.deleteAll();
+        serviceLayer.deleteAllGames();
     }
 
     @Test
@@ -37,12 +37,12 @@ public class GameRepositoryTest {
         game.setPrice(new BigDecimal("59.99"));
 
         // Act
-        game = gameRepo.save(game);
+        game = serviceLayer.saveGame(game);
 
         // Assert
-        Optional<Game> videoGame = gameRepo.findById(game.getGameId());
+        Game videoGame = serviceLayer.findGameById(game.getGameId());
 
-        assertEquals(videoGame.get(), game);
+        assertEquals(videoGame, game);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class GameRepositoryTest {
         game.setQuantity(5);
         game.setPrice(new BigDecimal("59.99"));
 
-        game = gameRepo.save(game); // save to database
+        game = serviceLayer.saveGame(game); // save to database
 
         // Add a second Game
         Game game2 = new Game();
@@ -67,10 +67,10 @@ public class GameRepositoryTest {
         game2.setQuantity(5);
         game2.setPrice(new BigDecimal("59.99"));
 
-        game2 = gameRepo.save(game2); // save to database
+        game2 = serviceLayer.saveGame(game2); // save to database
 
 
-        List<Game> gameList = gameRepo.findAll();
+        List<Game> gameList = serviceLayer.findAllGames();
 
         assertEquals(gameList.size(), 2);
     }
@@ -86,13 +86,13 @@ public class GameRepositoryTest {
         game.setQuantity(5);
         game.setPrice(new BigDecimal("59.99"));
 
-        game = gameRepo.save(game); // save the game
+        game = serviceLayer.saveGame(game); // save the game
 
         // Act
-        Optional<Game> gm = gameRepo.findById(game.getGameId());
+        Game gm = serviceLayer.findGameById(game.getGameId());
 
         // Assert
-        assertEquals(gm.get(), game);
+        assertEquals(gm, game);
     }
 
     @Test
@@ -106,18 +106,17 @@ public class GameRepositoryTest {
         game.setQuantity(5);
         game.setPrice(new BigDecimal("59.99"));
 
-        game = gameRepo.save(game);
+        game = serviceLayer.saveGame(game);
 
         // Act - update
         game.setPrice(new BigDecimal("39.99"));
         game.setQuantity(3);
-        gameRepo.save(game);
+        serviceLayer.saveGame(game);
 
         // Assert - comparison
-        Optional<Game> gm = gameRepo.findById(game.getGameId());
+        Game gm = serviceLayer.findGameById(game.getGameId());
 
-        assertEquals(gm.get(), game);
-
+        assertEquals(gm, game);
     }
 
     @Test
@@ -131,18 +130,18 @@ public class GameRepositoryTest {
         game.setQuantity(5);
         game.setPrice(new BigDecimal("59.99"));
 
-        game = gameRepo.save(game);
+        game = serviceLayer.saveGame(game);
 
         // Act
-        Optional<Game> gm = gameRepo.findById(game.getGameId());
+        Game gm = serviceLayer.findGameById(game.getGameId());
 
-        assertEquals(gm.get(), game); // check if actual game exists
+        assertEquals(gm, game); // check if actual game exists
 
-        gameRepo.deleteById(game.getGameId()); // delete the game
+        serviceLayer.deleteGame(game.getGameId()); // delete the game
 
-        gm = gameRepo.findById(game.getGameId());
+        Game game2 = serviceLayer.findGameById(game.getGameId());
 
-        assertFalse(gm.isPresent()); // must be false if item was successfully removed
+        assertNull(game2); // must be false if item was successfully removed
     }
 
     @Test
@@ -155,7 +154,7 @@ public class GameRepositoryTest {
         game.setStudio("Bethesda Game Studios");
         game.setQuantity(5);
         game.setPrice(new BigDecimal("59.99"));
-        game = gameRepo.save(game);
+        game = serviceLayer.saveGame(game);
 
         // Add a second game
         Game game2 = new Game();
@@ -165,7 +164,7 @@ public class GameRepositoryTest {
         game2.setStudio("Bethesda Game Studios");
         game2.setQuantity(5);
         game2.setPrice(new BigDecimal("29.99"));
-        game = gameRepo.save(game2);
+        game = serviceLayer.saveGame(game2);
 
         // Add a third
         Game game3 = new Game();
@@ -175,10 +174,10 @@ public class GameRepositoryTest {
         game3.setStudio("Mojang Studios");
         game3.setQuantity(5);
         game3.setPrice(new BigDecimal("19.99"));
-        game3 = gameRepo.save(game3);
+        game3 = serviceLayer.saveGame(game3);
 
         // Act
-        List<Game> games = gameRepo.findAllByStudio("Bethesda Game Studios");
+        List<Game> games = serviceLayer.findGamesByStudio("Bethesda Game Studios");
 
         // Assert
         assertEquals(games.size(), 2);
@@ -195,7 +194,7 @@ public class GameRepositoryTest {
         game.setStudio("Bethesda Game Studios");
         game.setQuantity(5);
         game.setPrice(new BigDecimal("59.99"));
-        game = gameRepo.save(game);
+        game = serviceLayer.saveGame(game);
 
         // add another
         Game game2 = new Game();
@@ -205,7 +204,7 @@ public class GameRepositoryTest {
         game2.setStudio("Bethesda Game Studios");
         game2.setQuantity(5);
         game2.setPrice(new BigDecimal("29.99"));
-        game2 = gameRepo.save(game2);
+        game2 = serviceLayer.saveGame(game2);
 
         // Add a third (with different rating)
         Game game3 = new Game();
@@ -215,10 +214,10 @@ public class GameRepositoryTest {
         game3.setStudio("Mojang Studios");
         game3.setQuantity(5);
         game3.setPrice(new BigDecimal("19.99"));
-        game3 = gameRepo.save(game3);
+        game3 = serviceLayer.saveGame(game3);
 
         // Act
-        List<Game> games = gameRepo.findAllByEsrbRating("M"); // filter for all games with M rating
+        List<Game> games = serviceLayer.findGamesByEsrbRating("M"); // filter for all games with M rating
 
         // Assert
         assertEquals(games.size(), 2); // Size of the list must be 2
@@ -234,10 +233,10 @@ public class GameRepositoryTest {
         game3.setStudio("Mojang Studios");
         game3.setQuantity(5);
         game3.setPrice(new BigDecimal("19.99"));
-        game3 = gameRepo.save(game3);
+        game3 = serviceLayer.saveGame(game3);
 
         // Act
-        List<Game> gm = gameRepo.findGamesByTitle("Minecraft");
+        List<Game> gm = serviceLayer.findGamesByTitle("Minecraft");
 
         // Assert
         assertEquals(gm.size(), 1);
