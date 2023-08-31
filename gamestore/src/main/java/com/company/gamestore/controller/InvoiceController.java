@@ -1,5 +1,6 @@
 package com.company.gamestore.controller;
 
+import com.company.gamestore.model.Invoice;
 import com.company.gamestore.service.ServiceLayer;
 import com.company.gamestore.viewmodel.InvoiceViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,9 @@ public class InvoiceController {
 
     @PostMapping("/invoice")
     @ResponseStatus(HttpStatus.CREATED)
-    public InvoiceViewModel addInvoice(@RequestBody @Valid InvoiceViewModel invoice) {
+    public @Valid InvoiceViewModel addInvoice(@RequestBody Invoice invoice) {
         return serviceLayer.saveInvoice(invoice);
+        // return serviceLayer.saveInvoice(serviceLayer.buildInvoiceViewModel(invoice))
     }
 
 }

@@ -121,7 +121,6 @@ public class Invoice implements Serializable {
     }
 
     public BigDecimal getSubtotal() {
-        subtotal = unitPrice.multiply(new BigDecimal(getQuantity()));
         return subtotal;
     }
 

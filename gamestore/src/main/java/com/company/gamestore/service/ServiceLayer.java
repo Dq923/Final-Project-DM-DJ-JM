@@ -14,7 +14,6 @@ import java.util.Optional;
 @Service
 public class ServiceLayer {
 
-    @Autowired
     private InvoiceRepository invoiceRepository;
     private GameRepository gameRepository;
     private TshirtRepository tshirtRepository;
@@ -299,12 +298,12 @@ public class ServiceLayer {
         inv.setZipcode(invoice.getZipcode());
         inv.setItemType(invoice.getItemType());
         inv.setItemId(invoice.getItemId());
-        //  inv.setUnitPrice(invoice.getUnitPrice());
+        inv.setUnitPrice(invoice.getUnitPrice());
         inv.setQuantity(invoice.getQuantity());
-        //   inv.setSubtotal(invoice.getSubtotal());
-        //   inv.setTax(invoice.getTax());
-        //   inv.setFee(invoice.getFee());
-        //   inv.setTotal(invoice.getTotal());
+        inv.setSubtotal(invoice.getSubtotal());
+        inv.setTax(invoice.getTax());
+        inv.setFee(invoice.getFee());
+        inv.setTotal(invoice.getTotal());
 
         return inv; // return the invoice view model
     }
@@ -312,113 +311,144 @@ public class ServiceLayer {
 
     // SAVE(POST) an invoice
     @Transactional
-    public InvoiceViewModel saveInvoice(InvoiceViewModel viewModel) {
-        Invoice invoice = new Invoice();
+    public InvoiceViewModel saveInvoice(Invoice invoice) {
+       Invoice newInvoice = new Invoice();
+
 
         // Set what we know for invoice
-        invoice.setName(viewModel.getName());
-        invoice.setStreet(viewModel.getStreet());
-        invoice.setCity(viewModel.getCity());
-        invoice.setState(viewModel.getState());
-        invoice.setZipcode(viewModel.getZipcode());
-        invoice.setItemType(viewModel.getItemType());
-        invoice.setItemId(viewModel.getItemId());
-        invoice.setQuantity(viewModel.getQuantity());
+       // newInvoice.setInvoiceId(invoice.getInvoiceId());
+        newInvoice.setName(invoice.getName());
+        newInvoice.setStreet(invoice.getStreet());
+        newInvoice.setCity(invoice.getCity());
+        newInvoice.setState(invoice.getState());
+        newInvoice.setZipcode(invoice.getZipcode());
+        newInvoice.setItemType(invoice.getItemType());
+        newInvoice.setItemId(invoice.getItemId());
+        newInvoice.setQuantity(invoice.getQuantity());
 
+       // newInvoice = invoiceRepository.save(newInvoice);
         // Validate item type (Maybe find a way to reduce later)
-        switch (viewModel.getItemType().toUpperCase()) {
+        switch (invoice.getItemType().toUpperCase()) {
             case "GAME":
-                invoice.setItemType("GAME");
-//                invoice.setUnitPrice(new BigDecimal(gameRepository.findById(viewModel.getId()));
-                Optional<Game> game = gameRepository.findById(invoice.getItemId());
+                newInvoice.setItemType("Game");
+                Optional<Game> game = gameRepository.findById(newInvoice.getItemId());
 
                 if (game.isEmpty()) {// if not found
                     throw new IllegalArgumentException("Game not found.");
                 }
 
-                if (game.get().getQuantity() < invoice.getQuantity()) {// if not enough in stock
+                if (game.get().getQuantity() < newInvoice.getQuantity()) {// if not enough in stock
                     throw new IllegalArgumentException("Not enough games in stock.");
                 }
-                invoice.setUnitPrice(game.get().getPrice()); //set the price
-                game.get().setQuantity(game.get().getQuantity() - invoice.getQuantity()); // update stock
+                newInvoice.setUnitPrice(game.get().getPrice()); //set the price
+                game.get().setQuantity(game.get().getQuantity() - newInvoice.getQuantity()); // update stock
 
 
                 break;
             case "TSHIRT":
-                invoice.setItemType("TSHIRT");
-                Optional<Tshirt> tShirt = tshirtRepository.findById(invoice.getItemId());
+                newInvoice.setItemType("T-shirt");
+                Optional<Tshirt> tShirt = tshirtRepository.findById(newInvoice.getItemId());
 
                 if (tShirt.isEmpty()) { // if not found
                     throw new IllegalArgumentException("Tshirt not found.");
                 }
 
-                if (tShirt.get().getQuantity() < invoice.getQuantity()) { // if not enough in stock
+                if (tShirt.get().getQuantity() < newInvoice.getQuantity()) { // if not enough in stock
                     throw new IllegalArgumentException("Not enough Tshirts in stock.");
                 }
 
-                invoice.setUnitPrice(tShirt.get().getPrice()); // sets the price
-                tShirt.get().setQuantity(tShirt.get().getQuantity() - invoice.getQuantity()); // update stock
+                newInvoice.setUnitPrice(tShirt.get().getPrice()); // sets the price
+                tShirt.get().setQuantity(tShirt.get().getQuantity() - newInvoice.getQuantity()); // update stock
                 break;
             case "CONSOLE":
-                invoice.setItemType("CONSOLE");
-                Optional<Tshirt> console = tshirtRepository.findById(invoice.getItemId());
+                newInvoice.setItemType("Console");
+                Optional<Tshirt> console = tshirtRepository.findById(newInvoice.getItemId());
 
                 if (console.isEmpty()) {// if not found
                     throw new IllegalArgumentException("Console not found.");
                 }
 
-                if (console.get().getQuantity() < invoice.getQuantity()) { // if not enough in stock
+                if (console.get().getQuantity() < newInvoice.getQuantity()) { // if not enough in stock
                     throw new IllegalArgumentException("Not enough consoles in stock.");
                 }
-                invoice.setUnitPrice(console.get().getPrice());// sets the price
-                console.get().setQuantity(console.get().getQuantity() - invoice.getQuantity()); // update stock
+                newInvoice.setUnitPrice(console.get().getPrice());// sets the price
+                console.get().setQuantity(console.get().getQuantity() - newInvoice.getQuantity()); // update stock
 
                 break;
             default:
                 throw new IllegalArgumentException("Not a valid item type");
         }
-        viewModel.setItemType(invoice.getItemType()); // make sure view model matches
-        viewModel.setUnitPrice(invoice.getUnitPrice());
+        //update the viewmodel's item type and unit price
+//        invoice.setItemType(newInvoice.getItemType());
+//        invoice.setUnitPrice(newInvoice.getUnitPrice());
 
-        // Calculate subtotal and set it
-        BigDecimal subtotalFormatted = invoice.getSubtotal().setScale(2, BigDecimal.ROUND_HALF_UP);
-        invoice.setSubtotal(subtotalFormatted);
+    // Calculate Subtotal and set it in both the actual invoice and the view model
+        BigDecimal subtotalFormatted = newInvoice.getUnitPrice().multiply(new BigDecimal(newInvoice.getQuantity()))
+                                         .setScale(2,BigDecimal.ROUND_HALF_UP);
 
-        //set viewmodel subtotal
-        viewModel.setSubtotal(invoice.getSubtotal());
+        newInvoice.setSubtotal(subtotalFormatted); // set subtotal
+       // invoice.setSubtotal(newInvoice.getSubtotal());
 
         // Calculate tax rate
-        Optional<Tax> stateTax = taxRepository.findTaxRateByState(invoice.getState());
+        Optional<Tax> stateTax = taxRepository.findTaxRateByState(newInvoice.getState());
 
 
         if (stateTax.isPresent()) {
             BigDecimal salesTaxRate = stateTax.get().getRate(); // gets rate from optional above
             // formats the tax calculation
-            BigDecimal taxFormatted = (salesTaxRate.multiply(invoice.getSubtotal())).setScale(2, BigDecimal.ROUND_HALF_UP);
-            invoice.setTax(taxFormatted);// sets the tax rate
+            BigDecimal taxFormatted = (salesTaxRate.multiply(newInvoice.getSubtotal())).setScale(2, BigDecimal.ROUND_HALF_UP);
+            newInvoice.setTax(taxFormatted);// sets the tax rate
+          //  invoice.setTax(newInvoice.getTax());// update view model's tax rate
         }
-        // set viewModel tax
-        viewModel.setTax(invoice.getTax());
+
 
         // Calculate processing fee
-        Optional<Fee> processingFee = feeRepository.findByProductType(invoice.getItemType());
+        Optional<Fee> processingFee = feeRepository.findByProductType(newInvoice.getItemType());
 
         if (processingFee.isPresent()) { // if processing Fee is present
             BigDecimal invoiceFee = processingFee.get().getFee();
-            if (invoice.getQuantity() > 10) { // add additional fee if quantity > 10
+            if (newInvoice.getQuantity() > 10) { // add additional fee if quantity > 10
                 invoiceFee = invoiceFee.add(new BigDecimal("15.49"));
             }
-            invoice.setFee(invoiceFee); // set invoice fee
+            newInvoice.setFee(invoiceFee); // set invoice fee
+          //  invoice.setFee(newInvoice.getFee());
         }
-        viewModel.setFee(invoice.getFee());
+
+
+        // Set the Grand totals in both the view model and the actual invoice
+        newInvoice.setTotal(newInvoice.getSubtotal().add(newInvoice.getTax().add(newInvoice.getFee()))
+                .setScale(2,BigDecimal.ROUND_HALF_UP));
+
+    //    invoice.setTotal(newInvoice.getTotal());
+
+
+        BigDecimal maxTotal = new BigDecimal("999.99");
+
+        if(newInvoice.getTotal().compareTo(maxTotal) > 0){
+            throw new IllegalArgumentException("Your total cannot exceed 999.99");
+        }
+
+
+        // Build view Model first so that we can check if the fields are valid
 
         // save the invoice
-        invoice = invoiceRepository.save(invoice);
+        invoiceRepository.save(newInvoice);
 
-        // set Id of View Model
-        viewModel.setId(invoice.getInvoiceId());
+       // invoice.setId(newInvoice.getInvoiceId()); // set ID of view Model
+       // InvoiceViewModel viewModel = buildInvoiceViewModel(newInvoice);
+
+        InvoiceViewModel viewModel = buildInvoiceViewModel(newInvoice);
+        viewModel.setId(newInvoice.getInvoiceId());
 
         return viewModel;
+        // Current approach: Receive an invoice viewModel, update it as we go along, then return it
+
+        // Alternative approach: Receive an Invoice, update the fields, then return buildInvoiceViewModel(invoice)
+    }
+
+    @Transactional
+    public void deleteAllInvoices(){
+        invoiceRepository.deleteAll();
     }
 
 }
