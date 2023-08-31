@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import com.company.gamestore.repository.GameRepository;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
@@ -313,23 +316,9 @@ public class ServiceLayer {
 
     // SAVE(POST) an invoice
     @Transactional
-    public InvoiceViewModel saveInvoice(Invoice invoice) {
-       Invoice newInvoice = new Invoice();
-
-
-        // Set what we know for invoice
-       // newInvoice.setInvoiceId(invoice.getInvoiceId());
-        newInvoice.setName(invoice.getName());
-        newInvoice.setStreet(invoice.getStreet());
-        newInvoice.setCity(invoice.getCity());
-        newInvoice.setState(invoice.getState());
-        newInvoice.setZipcode(invoice.getZipcode());
-     //   newInvoice.setItemType(invoice.getItemType());
-        newInvoice.setItemId(invoice.getItemId());
-        newInvoice.setQuantity(invoice.getQuantity());
-
+    public InvoiceViewModel saveInvoice(Invoice newInvoice) {
         // Validate item type (Maybe find a way to reduce later)
-        switch (invoice.getItemType().toUpperCase()) {
+        switch (newInvoice.getItemType().toUpperCase()) {
             case "GAME":
                 newInvoice.setItemType("Game");
                 Optional<Game> game = gameRepository.findById(newInvoice.getItemId());
@@ -380,8 +369,6 @@ public class ServiceLayer {
                 throw new IllegalArgumentException("Not a valid item type");
         }
         //update the viewmodel's item type and unit price
-//        invoice.setItemType(newInvoice.getItemType());
-//        invoice.setUnitPrice(newInvoice.getUnitPrice());
 
     // Calculate Subtotal
         BigDecimal subtotalFormatted = newInvoice.getUnitPrice().multiply(new BigDecimal(newInvoice.getQuantity()))
@@ -439,8 +426,23 @@ public class ServiceLayer {
     }
 
     @Transactional
+    public void updateInvoice(Invoice invoice){
+        invoiceRepository.save(invoice);
+    }
+
+    @Transactional
+    public void deleteInvoiceById(@RequestBody Integer id){
+        invoiceRepository.deleteById(id);
+    }
+
+    @Transactional
     public void deleteAllInvoices(){
         invoiceRepository.deleteAll();
     }
 
+    public List<Invoice> findAllInvoices() {return invoiceRepository.findAll();}
+
+    public Optional<Invoice> findInvoiceById(@RequestBody Integer id) {
+        return invoiceRepository.findById(id);
+    }
 }

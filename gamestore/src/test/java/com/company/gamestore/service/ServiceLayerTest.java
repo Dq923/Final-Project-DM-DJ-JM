@@ -392,31 +392,10 @@ class ServiceLayerTest {
     //
     // Invoice API
     //
+
     @Test
-    public void shouldSaveInvoice(){
-        InvoiceViewModel expected = new InvoiceViewModel();
-        expected.setId(1);
-        expected.setName("Johnny Bravo");
-        expected.setStreet("Random Street Name");
-        expected.setCity("Los Angeles");
-        expected.setState("CA");
-        expected.setZipcode("12345");
-        expected.setItemType("Game");
-        expected.setItemId(25);
-        expected.setQuantity(1);
-        expected.setUnitPrice(new BigDecimal("19.99"));
-        expected.setSubtotal(calculateSubtotal(expected.getUnitPrice(), expected.getQuantity()));
-        expected.setTax(calculateTax(expected.getSubtotal()));
-        expected.setFee(calculateFee(expected.getItemType()));
-
-        // calculate grand total
-        BigDecimal grandTotal = expected.getSubtotal().add(expected.getTax()
-                .add(expected.getFee()).setScale(2, BigDecimal.ROUND_HALF_UP));
-
-        expected.setTotal(grandTotal);
-
-
-        // Invoice to be saved
+    public void shouldSaveInvoice() {
+        //create invoice
         Invoice invoice = new Invoice();
         invoice.setInvoiceId(1);
         invoice.setName("Johnny Bravo");
@@ -429,29 +408,23 @@ class ServiceLayerTest {
         invoice.setQuantity(1);
         invoice.setUnitPrice(new BigDecimal("19.99"));
         invoice.setSubtotal(calculateSubtotal(invoice.getUnitPrice(), invoice.getQuantity()));
-        invoice.setTax(invoice.getSubtotal()); // tax rate * subtotal
+        invoice.setTax(calculateTax(invoice.getSubtotal())); // tax rate * subtotal
         invoice.setFee(calculateFee(invoice.getItemType()));
+
+        BigDecimal grandTotal = invoice.getSubtotal().add(invoice.getTax()
+                .add(invoice.getFee()).setScale(2, BigDecimal.ROUND_HALF_UP));
+
         invoice.setTotal(grandTotal);
 
-        InvoiceViewModel result = new InvoiceViewModel();
-        result.setName("Johnny Bravo");
-        result.setStreet("Random Street Name");
-        result.setCity("Los Angeles");
-        result.setState("CA");
-        result.setZipcode("12345");
-        result.setItemType("Game");
-        result.setItemId(25);
-        result.setQuantity(1);
-        result.setUnitPrice(new BigDecimal("19.99"));
-        result.setSubtotal(calculateSubtotal(expected.getUnitPrice(), expected.getQuantity()));
-        result.setTax(calculateTax(expected.getSubtotal()));
-        result.setFee(calculateFee(expected.getItemType()));
+        //Create expected IVM
+        InvoiceViewModel expected = serviceLayer.buildInvoiceViewModel(invoice);
 
-        expected.setTotal(grandTotal);
+        //pass invoice thru method
+        //IVM = results of save method
+        InvoiceViewModel actual = serviceLayer.saveInvoice(invoice);
 
-        result = serviceLayer.saveInvoice(invoice);
-
-        assertEquals(expected, result);
+        //assertE
+        assertEquals(expected, actual);
     }
 
 
@@ -647,6 +620,7 @@ class ServiceLayerTest {
 //        doReturn(null);
         // buildinvoiceviewModel
     }
+
     private void setUpTaxRepositoryMock(){
         taxRepository = mock(TaxRepository.class);
 
@@ -666,4 +640,9 @@ class ServiceLayerTest {
 
         doReturn(Optional.of(fee)).when(feeRepository).findByProductType("Game");
     }
+
+
+
+
+
 }
