@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -393,34 +394,29 @@ class ServiceLayerTest {
     //
     @Test
     public void shouldSaveInvoice(){
-        // Expected view model to be returned
-        InvoiceViewModel viewModel = new InvoiceViewModel();
-        viewModel.setId(1);
-        viewModel.setName("Johnny Bravo");
-        viewModel.setStreet("Random Street Name");
-        viewModel.setCity("Los Angeles");
-        viewModel.setState("CA");
-        viewModel.setZipcode("12345");
-        viewModel.setItemType("Game");
-        viewModel.setItemId(25);
-        viewModel.setQuantity(1);
-        viewModel.setUnitPrice(new BigDecimal("19.99"));
-        viewModel.setSubtotal(new BigDecimal("19.99"));
-
-        BigDecimal taxFormatted = new BigDecimal("0.06").multiply(viewModel.getSubtotal())
-                .setScale(2,BigDecimal.ROUND_HALF_UP); // tax rate * subtotal
-
-        viewModel.setTax(taxFormatted); // tax rate * subtotal
-        viewModel.setFee(new BigDecimal("1.49"));
+        InvoiceViewModel expected = new InvoiceViewModel();
+        expected.setId(1);
+        expected.setName("Johnny Bravo");
+        expected.setStreet("Random Street Name");
+        expected.setCity("Los Angeles");
+        expected.setState("CA");
+        expected.setZipcode("12345");
+        expected.setItemType("Game");
+        expected.setItemId(25);
+        expected.setQuantity(1);
+        expected.setUnitPrice(new BigDecimal("19.99"));
+        expected.setSubtotal(calculateSubtotal(expected.getUnitPrice(), expected.getQuantity()));
+        expected.setTax(calculateTax(expected.getSubtotal()));
+        expected.setFee(calculateFee(expected.getItemType()));
 
         // calculate grand total
-        BigDecimal grandTotal = viewModel.getSubtotal().add(viewModel.getTax()
-                .add(viewModel.getFee()).setScale(2, BigDecimal.ROUND_HALF_UP));
+        BigDecimal grandTotal = expected.getSubtotal().add(expected.getTax()
+                .add(expected.getFee()).setScale(2, BigDecimal.ROUND_HALF_UP));
 
-        viewModel.setTotal(grandTotal);
+        expected.setTotal(grandTotal);
 
-        // Invoice to be saved ---> we have to set the ID here because saveInvoice() requires
-        // an invoice with an ID to make the view Model
+
+        // Invoice to be saved
         Invoice invoice = new Invoice();
         invoice.setInvoiceId(1);
         invoice.setName("Johnny Bravo");
@@ -432,40 +428,57 @@ class ServiceLayerTest {
         invoice.setItemId(25);
         invoice.setQuantity(1);
         invoice.setUnitPrice(new BigDecimal("19.99"));
-        invoice.setSubtotal(new BigDecimal("19.99"));
-        invoice.setTax(taxFormatted);
-        invoice.setFee(new BigDecimal("1.49"));
-
+        invoice.setSubtotal(calculateSubtotal(invoice.getUnitPrice(), invoice.getQuantity()));
+        invoice.setTax(invoice.getSubtotal()); // tax rate * subtotal
+        invoice.setFee(calculateFee(invoice.getItemType()));
         invoice.setTotal(grandTotal);
 
-        // Act
-        InvoiceViewModel result = serviceLayer.saveInvoice(invoice); // save the invoice
+        InvoiceViewModel result = new InvoiceViewModel();
+        result.setName("Johnny Bravo");
+        result.setStreet("Random Street Name");
+        result.setCity("Los Angeles");
+        result.setState("CA");
+        result.setZipcode("12345");
+        result.setItemType("Game");
+        result.setItemId(25);
+        result.setQuantity(1);
+        result.setUnitPrice(new BigDecimal("19.99"));
+        result.setSubtotal(calculateSubtotal(expected.getUnitPrice(), expected.getQuantity()));
+        result.setTax(calculateTax(expected.getSubtotal()));
+        result.setFee(calculateFee(expected.getItemType()));
 
-        // Assert
-        assertEquals(viewModel, result); // two equal view models
+        expected.setTotal(grandTotal);
 
+        result = serviceLayer.saveInvoice(invoice);
 
-        //
-        // Testing with shirt
-        //
-
-//        InvoiceViewModel newViewModel = new InvoiceViewModel();
-//        newViewModel.setId(1);
-//        viewModel.setName("Johnny Bravo");
-//        viewModel.setStreet("Random Street Name");
-//        viewModel.setCity("Los Angeles");
-//        viewModel.setState("CA");
-//        viewModel.setZipcode("12345");
-//        viewModel.setItemType("Game");
-//        viewModel.setItemId(25);
-//        viewModel.setQuantity(1);
-//        viewModel.setUnitPrice(new BigDecimal("19.99"));
-//        viewModel.setSubtotal(new BigDecimal("19.99"));
-
+        assertEquals(expected, result);
     }
 
 
 // Helper methods
+    // Calculate subtotal
+    public BigDecimal calculateSubtotal(BigDecimal unitPrice, int quantity){
+        return unitPrice.multiply(new BigDecimal(quantity)).setScale(2,BigDecimal.ROUND_HALF_UP);
+    }
+
+    // Calculate Tax for item
+    public BigDecimal calculateTax(BigDecimal subtotal){
+        return new BigDecimal("0.06").multiply(subtotal).setScale(2,BigDecimal.ROUND_HALF_UP);
+    }
+
+    public BigDecimal calculateFee(String itemType){
+        BigDecimal fee = new BigDecimal("0");
+
+        if(Objects.equals(itemType, "Game"))
+            fee = new BigDecimal("1.49");
+        else if(Objects.equals(itemType,"T-shirt"))
+            fee = new BigDecimal("1.98");
+        else if(Objects.equals(itemType, "Console"))
+            fee =  new BigDecimal("14.99");
+
+        return fee;
+    }
+
     // set up GameRepo mock
     private void setUpGameRepositoryMock(){
 
@@ -572,7 +585,7 @@ class ServiceLayerTest {
     private void setUpInvoiceRepositoryMock() {
         invoiceRepository = mock(InvoiceRepository.class);
 
-        // invoice to be returned (maybe change this to view model)
+    // invoice view model to be returned (maybe change this to view model)
         InvoiceViewModel viewModel = new InvoiceViewModel();
         viewModel.setId(1);
         viewModel.setName("Johnny Bravo");
@@ -584,14 +597,20 @@ class ServiceLayerTest {
         viewModel.setItemId(25);
         viewModel.setQuantity(1);
         viewModel.setUnitPrice(new BigDecimal("19.99"));
-        viewModel.setSubtotal(new BigDecimal("19.99"));
-        viewModel.setTax(new BigDecimal("0.06").multiply(viewModel.getSubtotal())); // tax rate * subtotal
-        viewModel.setFee(new BigDecimal("1.49"));
-        viewModel.setTotal(viewModel.getSubtotal().add(viewModel.getTax().add(viewModel.getFee())));
+        viewModel.setSubtotal(calculateSubtotal(viewModel.getUnitPrice(),viewModel.getQuantity()));
+        viewModel.setTax(calculateTax(viewModel.getSubtotal())); // tax rate * subtotal
+        viewModel.setFee(calculateFee(viewModel.getItemType()));
+
+        // calculate grand total
+        BigDecimal grandTotal = viewModel.getSubtotal().add(viewModel.getTax()
+                .add(viewModel.getFee()).setScale(2, BigDecimal.ROUND_HALF_UP));
+
+        viewModel.setTotal(grandTotal);
+
+
 
         // Invoice being saved
         Invoice invoice = new Invoice();
-        invoice.setInvoiceId(1);
         invoice.setName("Johnny Bravo");
         invoice.setStreet("Random Street Name");
         invoice.setCity("Los Angeles");
@@ -601,10 +620,10 @@ class ServiceLayerTest {
         invoice.setItemId(25);
         invoice.setQuantity(1);
         invoice.setUnitPrice(new BigDecimal("19.99"));
-        invoice.setSubtotal(new BigDecimal("19.99"));
-        invoice.setTax(new BigDecimal("0.06").multiply(viewModel.getSubtotal())); // tax rate * subtotal
-        invoice.setFee(new BigDecimal("1.49"));
-        invoice.setTotal(viewModel.getSubtotal().add(viewModel.getTax().add(viewModel.getFee())));
+        invoice.setSubtotal(calculateSubtotal(invoice.getUnitPrice(), invoice.getQuantity()));
+        invoice.setTax(invoice.getSubtotal()); // tax rate * subtotal
+        invoice.setFee(calculateFee(invoice.getItemType()));
+        invoice.setTotal(grandTotal);
 
         // Example game item returned for invoice
         Game game = new Game();
@@ -618,7 +637,7 @@ class ServiceLayerTest {
         List<InvoiceViewModel> invoices = new ArrayList<>();
         invoices.add(viewModel);
 
-        doReturn(viewModel).when(invoiceRepository).save(invoice); // return console w/ ID when it is saved
+        doReturn(viewModel).when(invoiceRepository).save(invoice); // return invoice view model w/ ID when it is saved
         doReturn(Optional.of(viewModel)).when(invoiceRepository).findById(1); // Return optional when find by id is called
         doReturn(invoices).when(invoiceRepository).findAll(); // return list when GET ALL is requested
 

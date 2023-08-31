@@ -2,8 +2,10 @@ package com.company.gamestore.service;
 
 import com.company.gamestore.model.*;
 import com.company.gamestore.repository.*;
+import com.company.gamestore.repository.InvoiceRepository;
 import com.company.gamestore.viewmodel.InvoiceViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import com.company.gamestore.repository.GameRepository;
 import javax.transaction.Transactional;
@@ -322,11 +324,10 @@ public class ServiceLayer {
         newInvoice.setCity(invoice.getCity());
         newInvoice.setState(invoice.getState());
         newInvoice.setZipcode(invoice.getZipcode());
-        newInvoice.setItemType(invoice.getItemType());
+     //   newInvoice.setItemType(invoice.getItemType());
         newInvoice.setItemId(invoice.getItemId());
         newInvoice.setQuantity(invoice.getQuantity());
 
-       // newInvoice = invoiceRepository.save(newInvoice);
         // Validate item type (Maybe find a way to reduce later)
         switch (invoice.getItemType().toUpperCase()) {
             case "GAME":
@@ -382,7 +383,7 @@ public class ServiceLayer {
 //        invoice.setItemType(newInvoice.getItemType());
 //        invoice.setUnitPrice(newInvoice.getUnitPrice());
 
-    // Calculate Subtotal and set it in both the actual invoice and the view model
+    // Calculate Subtotal
         BigDecimal subtotalFormatted = newInvoice.getUnitPrice().multiply(new BigDecimal(newInvoice.getQuantity()))
                                          .setScale(2,BigDecimal.ROUND_HALF_UP);
 
@@ -399,7 +400,7 @@ public class ServiceLayer {
             BigDecimal taxFormatted = (salesTaxRate.multiply(newInvoice.getSubtotal())).setScale(2, BigDecimal.ROUND_HALF_UP);
             newInvoice.setTax(taxFormatted);// sets the tax rate
           //  invoice.setTax(newInvoice.getTax());// update view model's tax rate
-        }
+        }// else throw exception
 
 
         // Calculate processing fee
@@ -412,14 +413,12 @@ public class ServiceLayer {
             }
             newInvoice.setFee(invoiceFee); // set invoice fee
           //  invoice.setFee(newInvoice.getFee());
-        }
+        }// else throw exception
 
 
         // Set the Grand totals in both the view model and the actual invoice
         newInvoice.setTotal(newInvoice.getSubtotal().add(newInvoice.getTax().add(newInvoice.getFee()))
                 .setScale(2,BigDecimal.ROUND_HALF_UP));
-
-    //    invoice.setTotal(newInvoice.getTotal());
 
 
         BigDecimal maxTotal = new BigDecimal("999.99");
@@ -429,18 +428,11 @@ public class ServiceLayer {
         }
 
 
-        // Build view Model first so that we can check if the fields are valid
-
         // save the invoice
         invoiceRepository.save(newInvoice);
 
-       // invoice.setId(newInvoice.getInvoiceId()); // set ID of view Model
-       // InvoiceViewModel viewModel = buildInvoiceViewModel(newInvoice);
 
-        InvoiceViewModel viewModel = buildInvoiceViewModel(newInvoice);
-        viewModel.setId(newInvoice.getInvoiceId());
-
-        return viewModel;
+        return buildInvoiceViewModel(newInvoice);
         // Current approach: Receive an invoice viewModel, update it as we go along, then return it
 
         // Alternative approach: Receive an Invoice, update the fields, then return buildInvoiceViewModel(invoice)
