@@ -29,7 +29,7 @@ public class GraphController {
     public Optional<Game> findGameById(@Argument Integer id) { return gameRepository.findById(id); }
 
     @QueryMapping
-    public List<Game> findAGameByTitle(@Argument String title) {
+    public List<Game> findGamesByTitle(@Argument String title) {
         return gameRepository.findGamesByTitle(title);
     }
 

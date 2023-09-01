@@ -21,7 +21,7 @@ type Game {
 type Query {
     findAllGames: [Game]
     findGameById(id: Int): Game
-    findAGameByTitle(title: String): Game
+    findGamesByTitle(title: String): [Game]
     findAllByEsrbRating(esrb: String): [Game]
     findGamesByStudio(studio: String): [Game]
     findAllConsoles: [Console]
