@@ -442,7 +442,16 @@ public class ServiceLayer {
 
     public List<Invoice> findAllInvoices() {return invoiceRepository.findAll();}
 
-    public Optional<Invoice> findInvoiceById(@RequestBody Integer id) {
-        return invoiceRepository.findById(id);
+    public Invoice findInvoiceById(@RequestBody Integer id) {
+        Optional<Invoice> inv = invoiceRepository.findById(id);
+
+        if(inv.isPresent()) {
+            return inv.get();
+        }
+        return null;
+    }
+
+    public List<Invoice> findInvoicesByCustomerName(String name){
+        return invoiceRepository.findInvoicesByName(name);
     }
 }

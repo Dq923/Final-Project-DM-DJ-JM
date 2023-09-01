@@ -372,6 +372,7 @@ class ServiceLayerTest {
 
         // Invoice to be saved
         Invoice invoice = new Invoice();
+        invoice.setInvoiceId(1);
         invoice.setName("Johnny Bravo");
         invoice.setStreet("Random Street Name");
         invoice.setCity("Los Angeles");
@@ -386,12 +387,11 @@ class ServiceLayerTest {
         invoice.setFee(new BigDecimal("1.49"));
         invoice.setTotal(viewModel.getSubtotal().add(viewModel.getTax().add(viewModel.getFee())));
 
+        InvoiceViewModel ivm = serviceLayer.buildInvoiceViewModel(invoice);
+
+        assertEquals(viewModel, ivm);
 
     }
-
-    //
-    // Invoice API
-    //
 
     @Test
     public void shouldSaveInvoice() {
@@ -427,7 +427,60 @@ class ServiceLayerTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    public void shouldFindAllInvoices(){
+        List<Invoice> invoiceList = new ArrayList<>();
 
+        // create invoice obj
+        Invoice invoice = new Invoice();
+        invoice.setInvoiceId(1);
+        invoice.setName("Johnny Bravo");
+        invoice.setStreet("Random Street Name");
+        invoice.setCity("Los Angeles");
+        invoice.setState("CA");
+        invoice.setZipcode("12345");
+        invoice.setItemType("Game");
+        invoice.setItemId(25);
+        invoice.setQuantity(1);
+        invoice.setUnitPrice(new BigDecimal("19.99"));
+        invoice.setSubtotal(calculateSubtotal(invoice.getUnitPrice(), invoice.getQuantity()));
+        invoice.setTax(invoice.getSubtotal()); // tax rate * subtotal
+        invoice.setFee(calculateFee(invoice.getItemType()));
+        invoice.setTotal(new BigDecimal("22.68"));
+
+        invoiceList.add(invoice); // add to list
+
+        assertEquals(serviceLayer.findAllInvoices(), invoiceList);
+    }
+
+
+    @Test
+    public void shouldFindInvoiceByName(){
+        // Arrange - create a list for invoices
+        List<Invoice> invoiceList = new ArrayList<>();
+
+        Invoice invoice = new Invoice();
+        invoice.setInvoiceId(1);
+        invoice.setName("Johnny Bravo");
+        invoice.setStreet("Random Street Name");
+        invoice.setCity("Los Angeles");
+        invoice.setState("CA");
+        invoice.setZipcode("12345");
+        invoice.setItemType("Game");
+        invoice.setItemId(25);
+        invoice.setQuantity(1);
+        invoice.setUnitPrice(new BigDecimal("19.99"));
+        invoice.setSubtotal(calculateSubtotal(invoice.getUnitPrice(), invoice.getQuantity()));
+        invoice.setTax(invoice.getSubtotal()); // tax rate * subtotal
+        invoice.setFee(calculateFee(invoice.getItemType()));
+        invoice.setTotal(new BigDecimal("22.68"));
+
+        invoiceList.add(invoice); // add to list
+
+        // Assert
+        assertEquals(invoiceList, serviceLayer.findInvoicesByCustomerName("Johnny Bravo"));
+
+    }
 // Helper methods
     // Calculate subtotal
     public BigDecimal calculateSubtotal(BigDecimal unitPrice, int quantity){
@@ -584,6 +637,7 @@ class ServiceLayerTest {
 
         // Invoice being saved
         Invoice invoice = new Invoice();
+        invoice.setInvoiceId(1);
         invoice.setName("Johnny Bravo");
         invoice.setStreet("Random Street Name");
         invoice.setCity("Los Angeles");
@@ -607,18 +661,19 @@ class ServiceLayerTest {
         game.setEsrbRating("M");
         game.setPrice(new BigDecimal("19.99"));
         game.setQuantity(15);
-        List<InvoiceViewModel> invoices = new ArrayList<>();
-        invoices.add(viewModel);
+        List<Invoice> invoices = new ArrayList<>();
+        invoices.add(invoice);
 
         doReturn(viewModel).when(invoiceRepository).save(invoice); // return invoice view model w/ ID when it is saved
         doReturn(Optional.of(viewModel)).when(invoiceRepository).findById(1); // Return optional when find by id is called
         doReturn(invoices).when(invoiceRepository).findAll(); // return list when GET ALL is requested
 
-        // to save an invoice, a game, tshirt, or console is searched by ID, therefore:
+    // to save an invoice, a game, tshirt, or console is searched by ID, therefore:
         doReturn(Optional.of(game)).when(gameRepository).findById(25);
-//        doReturn(null);
-//        doReturn(null);
-        // buildinvoiceviewModel
+    // custom queries
+        doReturn(invoices).when(invoiceRepository).findInvoicesByName("Johnny Bravo");
+        //doReturn()
+
     }
 
     private void setUpTaxRepositoryMock(){

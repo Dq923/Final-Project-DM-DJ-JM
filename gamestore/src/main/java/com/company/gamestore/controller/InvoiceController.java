@@ -26,14 +26,14 @@ public class InvoiceController {
     @PutMapping("/invoices")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateInvoice(@RequestBody Invoice invoice){
-        if (serviceLayer.findInvoiceById(invoice.getInvoiceId()).isPresent()) {
-            serviceLayer.saveInvoice(invoice);
+        if (!(serviceLayer.findInvoiceById(invoice.getInvoiceId()) == null)) {
+            serviceLayer.updateInvoice(invoice);
         }
     }
 
     @DeleteMapping("/invoices/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteInvoice(@RequestBody Integer id){
+    public void deleteInvoice(@PathVariable Integer id){
         serviceLayer.deleteInvoiceById(id);
     }
 
@@ -45,9 +45,13 @@ public class InvoiceController {
 
     @GetMapping("/invoices/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<Invoice> getInvoiceById(@RequestBody Integer id) {
+    public Invoice getInvoiceById(@PathVariable int id) {
         return serviceLayer.findInvoiceById(id);
     }
+
+    @GetMapping("/invoices/name/{name}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Invoice> getInvoiceByCustomerName(@PathVariable String name){return serviceLayer.findInvoicesByCustomerName(name);}
 
 
 }
