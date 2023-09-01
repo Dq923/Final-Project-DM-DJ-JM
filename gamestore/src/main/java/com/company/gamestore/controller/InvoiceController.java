@@ -16,9 +16,15 @@ public class InvoiceController {
     @Autowired
     ServiceLayer serviceLayer;
 
+//    @PostMapping("/invoices")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public InvoiceViewModel addInvoice(@RequestBody @Valid InvoiceViewModel viewModel) {
+//        return serviceLayer.saveInvoice(viewModel);
+//        // return serviceLayer.saveInvoice(serviceLayer.buildInvoiceViewModel(invoice))
+//    }
     @PostMapping("/invoices")
     @ResponseStatus(HttpStatus.CREATED)
-    public InvoiceViewModel addInvoice(@RequestBody Invoice invoice) {
+    public InvoiceViewModel addInvoice(@RequestBody @Valid Invoice invoice) {
         return serviceLayer.saveInvoice(invoice);
         // return serviceLayer.saveInvoice(serviceLayer.buildInvoiceViewModel(invoice))
     }

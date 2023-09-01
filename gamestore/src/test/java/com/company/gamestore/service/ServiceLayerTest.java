@@ -419,8 +419,7 @@ class ServiceLayerTest {
         //Create expected IVM
         InvoiceViewModel expected = serviceLayer.buildInvoiceViewModel(invoice);
 
-        //pass invoice thru method
-        //IVM = results of save method
+        // Create Actual
         InvoiceViewModel actual = serviceLayer.saveInvoice(invoice);
 
         //assertE

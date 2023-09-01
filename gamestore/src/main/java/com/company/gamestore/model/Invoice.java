@@ -1,8 +1,13 @@
 package com.company.gamestore.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -15,20 +20,31 @@ public class Invoice implements Serializable {
     @Column(name = "invoice_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer invoiceId;
+    @NotEmpty(message = "You must provide first and last name.")
     private String name;
+    @NotEmpty(message = "You must provide a street address.")
     private String street;
+    @NotEmpty(message = "You must provide a city.")
     private String city;
+    @Length(min = 2, max = 2, message= "You must provide a two-character code for your state i.e. California -> CA")
     private String state;
+
+    @NotEmpty(message = "You must provide a zipcode.")
+    @Length(min = 5, max = 10)
     private String zipcode;
+    @NotEmpty(message = "You must provide an item type of Game, T-shirt, or Console.")
     @Column(name = "item_type")
     private String itemType;
 
+    @NotNull(message = "You must provide an item ID.")
+    @Digits(integer = 16, fraction = 0)
     @Column(name = "item_id")
     private Integer itemId;
 
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
-
+    @Positive(message = "You must provide a quantity greater than zero.")
+    @NotNull(message = "You must provide a quantity.")
     private Integer quantity;
     private BigDecimal subtotal;
 

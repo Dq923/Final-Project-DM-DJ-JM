@@ -4,13 +4,14 @@ import com.company.gamestore.model.*;
 import com.company.gamestore.repository.*;
 import com.company.gamestore.repository.InvoiceRepository;
 import com.company.gamestore.viewmodel.InvoiceViewModel;
+import org.hibernate.validator.internal.engine.messageinterpolation.parser.ELState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import com.company.gamestore.repository.GameRepository;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
+import com.company.gamestore.controller.ControllerExceptionHandler;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
@@ -336,11 +337,13 @@ public class ServiceLayer {
 
                 break;
             case "TSHIRT":
+            case "T-SHIRT":
+            case "T SHIRT":
                 newInvoice.setItemType("T-shirt");
                 Optional<Tshirt> tShirt = tshirtRepository.findById(newInvoice.getItemId());
 
                 if (tShirt.isEmpty()) { // if not found
-                    throw new IllegalArgumentException("Tshirt not found.");
+                    throw new IllegalArgumentException("T-shirt not found.");
                 }
 
                 if (tShirt.get().getQuantity() < newInvoice.getQuantity()) { // if not enough in stock
@@ -352,7 +355,7 @@ public class ServiceLayer {
                 break;
             case "CONSOLE":
                 newInvoice.setItemType("Console");
-                Optional<Tshirt> console = tshirtRepository.findById(newInvoice.getItemId());
+                Optional<Console> console = consoleRepository.findById(newInvoice.getItemId());
 
                 if (console.isEmpty()) {// if not found
                     throw new IllegalArgumentException("Console not found.");
@@ -387,7 +390,9 @@ public class ServiceLayer {
             BigDecimal taxFormatted = (salesTaxRate.multiply(newInvoice.getSubtotal())).setScale(2, BigDecimal.ROUND_HALF_UP);
             newInvoice.setTax(taxFormatted);// sets the tax rate
           //  invoice.setTax(newInvoice.getTax());// update view model's tax rate
-        }// else throw exception
+        }else{
+            throw new IllegalArgumentException("State not found. Check your input.");
+        }
 
 
         // Calculate processing fee
@@ -400,7 +405,7 @@ public class ServiceLayer {
             }
             newInvoice.setFee(invoiceFee); // set invoice fee
           //  invoice.setFee(newInvoice.getFee());
-        }// else throw exception
+        }
 
 
         // Set the Grand totals in both the view model and the actual invoice
@@ -424,6 +429,7 @@ public class ServiceLayer {
 
         // Alternative approach: Receive an Invoice, update the fields, then return buildInvoiceViewModel(invoice)
     }
+
 
     @Transactional
     public void updateInvoice(Invoice invoice){

@@ -48,7 +48,14 @@ class InvoiceControllerTest {
     @Test
     public void shouldCreateInvoice() throws Exception{
         Invoice invoice = new Invoice();
-
+        invoice.setName("Johnny");
+        invoice.setStreet("Random street address");
+        invoice.setCity("city name");
+        invoice.setZipcode("12345");
+        invoice.setState("CA");
+        invoice.setItemType("Game");
+        invoice.setItemId(1);
+        invoice.setQuantity(1);
         String inputJson = mapper.writeValueAsString(invoice);
 
         mockMvc.perform(post("/invoices")
