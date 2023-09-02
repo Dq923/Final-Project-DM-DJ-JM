@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class InvoiceViewModel {
-
     private Integer id;
     private String name;
     private String street;
@@ -14,19 +13,11 @@ public class InvoiceViewModel {
     private String zipcode;
     private String itemType;
     private Integer itemId;
-
     private BigDecimal unitPrice;
-
-    // @Positive(message = "You must provide a quantity greater than zero.")
-    //  @NotNull(message = "You must provide a quantity.")
     private Integer quantity;
-    // consider other jsr 303 annotations for numbers such as min/max
     private BigDecimal subtotal;
-
     private BigDecimal tax;
-
     private BigDecimal fee;
-
     private BigDecimal total;
 
     public Integer getId() {
