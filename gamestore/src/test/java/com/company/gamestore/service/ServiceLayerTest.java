@@ -671,8 +671,6 @@ class ServiceLayerTest {
         doReturn(Optional.of(game)).when(gameRepository).findById(25);
     // custom queries
         doReturn(invoices).when(invoiceRepository).findInvoicesByName("Johnny Bravo");
-        //doReturn()
-
     }
 
     private void setUpTaxRepositoryMock(){

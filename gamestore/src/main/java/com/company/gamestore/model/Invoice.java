@@ -20,7 +20,7 @@ public class Invoice implements Serializable {
     @Column(name = "invoice_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer invoiceId;
-    @NotEmpty(message = "You must provide first and last name.")
+    @NotEmpty(message = "You must provide a name.")
     private String name;
     @NotEmpty(message = "You must provide a street address.")
     private String street;
@@ -29,8 +29,7 @@ public class Invoice implements Serializable {
     @Length(min = 2, max = 2, message= "You must provide a two-character code for your state i.e. California -> CA")
     private String state;
 
-    @NotEmpty(message = "You must provide a zipcode.")
-    @Length(min = 5, max = 10)
+    @Length(min = 5, max = 10, message = "You must provide a zipcode that is between 5 and 10 characters.")
     private String zipcode;
     @NotEmpty(message = "You must provide an item type of Game, T-shirt, or Console.")
     @Column(name = "item_type")

@@ -63,4 +63,13 @@ public class ConsoleController {
         return serviceLayer.findConsolesByManufacturers(manufacturer);
     }
 
+
+
+// METHOD ONLY FOR CLEARING DATABASE WHEN TESTING W/ INSOMNIA
+//    @DeleteMapping("/consoles")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void deleteConsoles() {
+//        serviceLayer.deleteAllConsoles();
+//    }
+
 }

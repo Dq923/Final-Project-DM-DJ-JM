@@ -2,16 +2,11 @@ package com.company.gamestore.service;
 
 import com.company.gamestore.model.*;
 import com.company.gamestore.repository.*;
-import com.company.gamestore.repository.InvoiceRepository;
 import com.company.gamestore.viewmodel.InvoiceViewModel;
-import org.hibernate.validator.internal.engine.messageinterpolation.parser.ELState;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import com.company.gamestore.repository.GameRepository;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import com.company.gamestore.controller.ControllerExceptionHandler;
+
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
@@ -212,7 +207,6 @@ public class ServiceLayer {
         return consoleRepository.findAllConsoleByManufacturer(manufacturer);
     }
 
-
     //
     // Tshirt API
     //
@@ -333,8 +327,6 @@ public class ServiceLayer {
                 }
                 newInvoice.setUnitPrice(game.get().getPrice()); //set the price
                 game.get().setQuantity(game.get().getQuantity() - newInvoice.getQuantity()); // update stock
-
-
                 break;
             case "TSHIRT":
             case "T-SHIRT":
@@ -371,14 +363,12 @@ public class ServiceLayer {
             default:
                 throw new IllegalArgumentException("Not a valid item type");
         }
-        //update the viewmodel's item type and unit price
 
     // Calculate Subtotal
         BigDecimal subtotalFormatted = newInvoice.getUnitPrice().multiply(new BigDecimal(newInvoice.getQuantity()))
                                          .setScale(2,BigDecimal.ROUND_HALF_UP);
 
         newInvoice.setSubtotal(subtotalFormatted); // set subtotal
-       // invoice.setSubtotal(newInvoice.getSubtotal());
 
         // Calculate tax rate
         Optional<Tax> stateTax = taxRepository.findTaxRateByState(newInvoice.getState());
@@ -389,7 +379,6 @@ public class ServiceLayer {
             // formats the tax calculation
             BigDecimal taxFormatted = (salesTaxRate.multiply(newInvoice.getSubtotal())).setScale(2, BigDecimal.ROUND_HALF_UP);
             newInvoice.setTax(taxFormatted);// sets the tax rate
-          //  invoice.setTax(newInvoice.getTax());// update view model's tax rate
         }else{
             throw new IllegalArgumentException("State not found. Check your input.");
         }
@@ -404,7 +393,6 @@ public class ServiceLayer {
                 invoiceFee = invoiceFee.add(new BigDecimal("15.49"));
             }
             newInvoice.setFee(invoiceFee); // set invoice fee
-          //  invoice.setFee(newInvoice.getFee());
         }
 
 

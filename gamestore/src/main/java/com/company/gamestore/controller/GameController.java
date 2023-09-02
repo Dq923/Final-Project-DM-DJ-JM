@@ -1,14 +1,12 @@
 package com.company.gamestore.controller;
 
 import com.company.gamestore.model.Game;
-import com.company.gamestore.repository.GameRepository;
 import com.company.gamestore.service.ServiceLayer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 // import static org.graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality.Optional;
 @RestController
@@ -69,5 +67,12 @@ public class GameController {
         return serviceLayer.findGamesByTitle(title);
     }
 
+
+// METHOD ONLY FOR CLEARING DATABASE WHEN TESTING W/ INSOMNIA
+//    @DeleteMapping("/games")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void deleteGames() {
+//        serviceLayer.deleteAllGames();
+//    }
 
 }

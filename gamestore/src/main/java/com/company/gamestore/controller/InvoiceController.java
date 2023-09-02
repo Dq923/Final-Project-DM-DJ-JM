@@ -16,12 +16,6 @@ public class InvoiceController {
     @Autowired
     ServiceLayer serviceLayer;
 
-//    @PostMapping("/invoices")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public InvoiceViewModel addInvoice(@RequestBody @Valid InvoiceViewModel viewModel) {
-//        return serviceLayer.saveInvoice(viewModel);
-//        // return serviceLayer.saveInvoice(serviceLayer.buildInvoiceViewModel(invoice))
-//    }
     @PostMapping("/invoices")
     @ResponseStatus(HttpStatus.CREATED)
     public InvoiceViewModel addInvoice(@RequestBody @Valid Invoice invoice) {
@@ -59,5 +53,11 @@ public class InvoiceController {
     @ResponseStatus(HttpStatus.OK)
     public List<Invoice> getInvoiceByCustomerName(@PathVariable String name){return serviceLayer.findInvoicesByCustomerName(name);}
 
+
+
+// METHOD ONLY FOR CLEARING DATABASE WHEN TESTING W/ INSOMNIA
+//    @DeleteMapping("/invoices")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void deleteAll(){serviceLayer.deleteAllInvoices();}
 
 }

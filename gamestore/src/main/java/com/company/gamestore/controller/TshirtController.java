@@ -57,4 +57,10 @@ public class TshirtController {
     public void deleteTshirtById(@PathVariable Integer id) {
         serviceLayer.deleteShirt(id);
     }
+
+
+// METHOD ONLY FOR CLEARING DATABASE WHEN TESTING W/ INSOMNIA
+//    @DeleteMapping("/tshirts")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void deleteAll() {serviceLayer.deleteAllShirts();}
 }
