@@ -364,9 +364,9 @@ public class ServiceLayer {
                 throw new IllegalArgumentException("Not a valid item type");
         }
 
-    // Calculate Subtotal
+        // Calculate Subtotal
         BigDecimal subtotalFormatted = newInvoice.getUnitPrice().multiply(new BigDecimal(newInvoice.getQuantity()))
-                                         .setScale(2,BigDecimal.ROUND_HALF_UP);
+                .setScale(2, BigDecimal.ROUND_HALF_UP);
 
         newInvoice.setSubtotal(subtotalFormatted); // set subtotal
 
@@ -379,7 +379,7 @@ public class ServiceLayer {
             // formats the tax calculation
             BigDecimal taxFormatted = (salesTaxRate.multiply(newInvoice.getSubtotal())).setScale(2, BigDecimal.ROUND_HALF_UP);
             newInvoice.setTax(taxFormatted);// sets the tax rate
-        }else{
+        } else {
             throw new IllegalArgumentException("State not found. Check your input.");
         }
 
@@ -398,12 +398,12 @@ public class ServiceLayer {
 
         // Set the Grand totals in both the view model and the actual invoice
         newInvoice.setTotal(newInvoice.getSubtotal().add(newInvoice.getTax().add(newInvoice.getFee()))
-                .setScale(2,BigDecimal.ROUND_HALF_UP));
+                .setScale(2, BigDecimal.ROUND_HALF_UP));
 
 
         BigDecimal maxTotal = new BigDecimal("999.99");
 
-        if(newInvoice.getTotal().compareTo(maxTotal) > 0){
+        if (newInvoice.getTotal().compareTo(maxTotal) > 0) {
             throw new IllegalArgumentException("Your total cannot exceed 999.99");
         }
 
@@ -420,32 +420,34 @@ public class ServiceLayer {
 
 
     @Transactional
-    public void updateInvoice(Invoice invoice){
+    public void updateInvoice(Invoice invoice) {
         invoiceRepository.save(invoice);
     }
 
     @Transactional
-    public void deleteInvoiceById(@RequestBody Integer id){
+    public void deleteInvoiceById(@RequestBody Integer id) {
         invoiceRepository.deleteById(id);
     }
 
     @Transactional
-    public void deleteAllInvoices(){
+    public void deleteAllInvoices() {
         invoiceRepository.deleteAll();
     }
 
-    public List<Invoice> findAllInvoices() {return invoiceRepository.findAll();}
+    public List<Invoice> findAllInvoices() {
+        return invoiceRepository.findAll();
+    }
 
     public Invoice findInvoiceById(@RequestBody Integer id) {
         Optional<Invoice> inv = invoiceRepository.findById(id);
 
-        if(inv.isPresent()) {
+        if (inv.isPresent()) {
             return inv.get();
         }
         return null;
     }
 
-    public List<Invoice> findInvoicesByCustomerName(String name){
+    public List<Invoice> findInvoicesByCustomerName(String name) {
         return invoiceRepository.findInvoicesByName(name);
     }
 }

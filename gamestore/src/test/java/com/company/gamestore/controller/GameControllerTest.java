@@ -57,7 +57,7 @@ class GameControllerTest {
     @Test
     public void shouldCreateGame() throws Exception {
         Game game = new Game();
-      //  serviceLayer.saveGame(game);
+        //  serviceLayer.saveGame(game);
 
         String inputJson = mapper.writeValueAsString(game);
 
@@ -107,7 +107,7 @@ class GameControllerTest {
         // Act then Assert - update and perform put request + status check
         game.setQuantity(3);
 
-       // serviceLayer.saveGame(game); // save the game
+        // serviceLayer.saveGame(game); // save the game
         String inputJson = mapper.writeValueAsString(game); //convert game record to json
 
         mockMvc.perform(put("/games") // put request

@@ -5,7 +5,6 @@ import com.company.gamestore.repository.*;
 import com.company.gamestore.viewmodel.InvoiceViewModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class ServiceLayerTest {
@@ -27,7 +26,7 @@ class ServiceLayerTest {
     InvoiceRepository invoiceRepository;
 
     @BeforeEach
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         setUpGameRepositoryMock();
         setUpTshirtRepositoryMock();
         setUpConsoleRepositoryMock();
@@ -40,12 +39,11 @@ class ServiceLayerTest {
     }
 
 
-
-//
+    //
 // GAME SERVICE TESTING
 //
     @Test
-    public void shouldSaveGame(){
+    public void shouldSaveGame() {
         // Arrange
         Game expectedResult = new Game();
         expectedResult.setGameId(1);
@@ -56,7 +54,7 @@ class ServiceLayerTest {
         expectedResult.setPrice(new BigDecimal("19.99"));
         expectedResult.setQuantity(15);
 
-    // Game to be saved
+        // Game to be saved
         Game game = new Game();
         game.setTitle("Minecraft");
         game.setDescription("description");
@@ -73,7 +71,7 @@ class ServiceLayerTest {
     }
 
     @Test
-    public void shouldFindGameById(){
+    public void shouldFindGameById() {
 
         Game expectedResult = new Game();
         expectedResult.setGameId(1);
@@ -88,7 +86,7 @@ class ServiceLayerTest {
     }
 
     @Test
-    public void shouldFindAllGames(){
+    public void shouldFindAllGames() {
         List<Game> expectedGameList = new ArrayList<>();// make a list of expected game titles
 
         Game expectedResult = new Game();
@@ -106,7 +104,7 @@ class ServiceLayerTest {
     }
 
     @Test
-    public void shouldFindGamesByTitle(){
+    public void shouldFindGamesByTitle() {
         List<Game> expectedGameList = new ArrayList<>();// make a list of expected game titles
 
         Game expectedResult = new Game();
@@ -124,7 +122,7 @@ class ServiceLayerTest {
     }
 
     @Test
-    public void shouldFindGamesByEsrbRating(){
+    public void shouldFindGamesByEsrbRating() {
         List<Game> expectedGameList = new ArrayList<>();
 
         Game expectedResult = new Game();
@@ -142,7 +140,7 @@ class ServiceLayerTest {
     }
 
     @Test
-    public void shouldFindGamesByStudio(){
+    public void shouldFindGamesByStudio() {
         List<Game> expectedGameList = new ArrayList<>();
 
         Game expectedResult = new Game();
@@ -160,12 +158,11 @@ class ServiceLayerTest {
     }
 
 
-
-//
+    //
 // TSHIRT SERVICE TESTING
 //
     @Test
-    public void shouldSaveTshirt(){
+    public void shouldSaveTshirt() {
         // Arrange
         Tshirt expectedResult = new Tshirt();
         expectedResult.setId(1);
@@ -191,7 +188,7 @@ class ServiceLayerTest {
     }
 
     @Test
-    public void shouldFindTshirtById(){
+    public void shouldFindTshirtById() {
         Tshirt expectedResult = new Tshirt();
         expectedResult.setId(1);
         expectedResult.setColor("purple");
@@ -200,11 +197,11 @@ class ServiceLayerTest {
         expectedResult.setPrice(new BigDecimal("5.00"));
         expectedResult.setQuantity(2);
 
-        assertEquals(Optional.of(expectedResult),serviceLayer.findShirtById(1));
+        assertEquals(Optional.of(expectedResult), serviceLayer.findShirtById(1));
     }
 
     @Test
-    public void shouldFindAllTShirts(){
+    public void shouldFindAllTShirts() {
         List<Tshirt> shirts = new ArrayList<>();
 
         Tshirt expectedResult = new Tshirt();
@@ -221,7 +218,7 @@ class ServiceLayerTest {
     }
 
     @Test
-    public void shouldFindTshirtsByColor(){
+    public void shouldFindTshirtsByColor() {
         List<Tshirt> shirts = new ArrayList<>();
 
         Tshirt expectedResult = new Tshirt();
@@ -238,7 +235,7 @@ class ServiceLayerTest {
     }
 
     @Test
-    public void shouldFindTshirtsBySize(){
+    public void shouldFindTshirtsBySize() {
         List<Tshirt> shirts = new ArrayList<>();
 
         Tshirt expectedResult = new Tshirt();
@@ -255,14 +252,12 @@ class ServiceLayerTest {
     }
 
 
-
-
 //
 // CONSOLE SERVICE TESTING
 //
 
     @Test
-    public void shouldSaveConsole(){
+    public void shouldSaveConsole() {
         // Arrange
         Console expectedResult = new Console();
         expectedResult.setId(1);
@@ -289,7 +284,7 @@ class ServiceLayerTest {
     }
 
     @Test
-    public void shouldFindAllConsoles(){
+    public void shouldFindAllConsoles() {
         List<Console> consoleList = new ArrayList<>();
 
         Console expectedResult = new Console();
@@ -310,7 +305,7 @@ class ServiceLayerTest {
 
 
     @Test
-    public void shouldFindConsoleById(){
+    public void shouldFindConsoleById() {
         Console expectedResult = new Console();
         expectedResult.setId(1);
         expectedResult.setModel("Model W");
@@ -326,7 +321,7 @@ class ServiceLayerTest {
     }
 
     @Test
-    public void shouldFindConsoleByManufacturer(){
+    public void shouldFindConsoleByManufacturer() {
         List<Console> consoleList = new ArrayList<>();
 
         Console expectedResult = new Console();
@@ -346,13 +341,12 @@ class ServiceLayerTest {
     }
 
 
-
 //
 //  INVOICE TESTING
 //
 
     @Test
-    public void shouldBuildInvoiceViewModel(){
+    public void shouldBuildInvoiceViewModel() {
         // Expected view model to be returned
         InvoiceViewModel viewModel = new InvoiceViewModel();
         viewModel.setId(1);
@@ -427,7 +421,7 @@ class ServiceLayerTest {
     }
 
     @Test
-    public void shouldFindAllInvoices(){
+    public void shouldFindAllInvoices() {
         List<Invoice> invoiceList = new ArrayList<>();
 
         // create invoice obj
@@ -454,7 +448,7 @@ class ServiceLayerTest {
 
 
     @Test
-    public void shouldFindInvoiceByName(){
+    public void shouldFindInvoiceByName() {
         // Arrange - create a list for invoices
         List<Invoice> invoiceList = new ArrayList<>();
 
@@ -480,32 +474,33 @@ class ServiceLayerTest {
         assertEquals(invoiceList, serviceLayer.findInvoicesByCustomerName("Johnny Bravo"));
 
     }
-// Helper methods
+
+    // Helper methods
     // Calculate subtotal
-    public BigDecimal calculateSubtotal(BigDecimal unitPrice, int quantity){
-        return unitPrice.multiply(new BigDecimal(quantity)).setScale(2,BigDecimal.ROUND_HALF_UP);
+    public BigDecimal calculateSubtotal(BigDecimal unitPrice, int quantity) {
+        return unitPrice.multiply(new BigDecimal(quantity)).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
     // Calculate Tax for item
-    public BigDecimal calculateTax(BigDecimal subtotal){
-        return new BigDecimal("0.06").multiply(subtotal).setScale(2,BigDecimal.ROUND_HALF_UP);
+    public BigDecimal calculateTax(BigDecimal subtotal) {
+        return new BigDecimal("0.06").multiply(subtotal).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
-    public BigDecimal calculateFee(String itemType){
+    public BigDecimal calculateFee(String itemType) {
         BigDecimal fee = new BigDecimal("0");
 
-        if(Objects.equals(itemType, "Game"))
+        if (Objects.equals(itemType, "Game"))
             fee = new BigDecimal("1.49");
-        else if(Objects.equals(itemType,"T-shirt"))
+        else if (Objects.equals(itemType, "T-shirt"))
             fee = new BigDecimal("1.98");
-        else if(Objects.equals(itemType, "Console"))
-            fee =  new BigDecimal("14.99");
+        else if (Objects.equals(itemType, "Console"))
+            fee = new BigDecimal("14.99");
 
         return fee;
     }
 
     // set up GameRepo mock
-    private void setUpGameRepositoryMock(){
+    private void setUpGameRepositoryMock() {
 
         gameRepository = mock(GameRepository.class);
         // object being returned
@@ -610,7 +605,7 @@ class ServiceLayerTest {
     private void setUpInvoiceRepositoryMock() {
         invoiceRepository = mock(InvoiceRepository.class);
 
-    // invoice view model to be returned (maybe change this to view model)
+        // invoice view model to be returned (maybe change this to view model)
         InvoiceViewModel viewModel = new InvoiceViewModel();
         viewModel.setId(1);
         viewModel.setName("Johnny Bravo");
@@ -622,7 +617,7 @@ class ServiceLayerTest {
         viewModel.setItemId(25);
         viewModel.setQuantity(1);
         viewModel.setUnitPrice(new BigDecimal("19.99"));
-        viewModel.setSubtotal(calculateSubtotal(viewModel.getUnitPrice(),viewModel.getQuantity()));
+        viewModel.setSubtotal(calculateSubtotal(viewModel.getUnitPrice(), viewModel.getQuantity()));
         viewModel.setTax(calculateTax(viewModel.getSubtotal())); // tax rate * subtotal
         viewModel.setFee(calculateFee(viewModel.getItemType()));
 
@@ -631,7 +626,6 @@ class ServiceLayerTest {
                 .add(viewModel.getFee()).setScale(2, BigDecimal.ROUND_HALF_UP));
 
         viewModel.setTotal(grandTotal);
-
 
 
         // Invoice being saved
@@ -667,13 +661,13 @@ class ServiceLayerTest {
         doReturn(Optional.of(viewModel)).when(invoiceRepository).findById(1); // Return optional when find by id is called
         doReturn(invoices).when(invoiceRepository).findAll(); // return list when GET ALL is requested
 
-    // to save an invoice, a game, tshirt, or console is searched by ID, therefore:
+        // to save an invoice, a game, tshirt, or console is searched by ID, therefore:
         doReturn(Optional.of(game)).when(gameRepository).findById(25);
-    // custom queries
+        // custom queries
         doReturn(invoices).when(invoiceRepository).findInvoicesByName("Johnny Bravo");
     }
 
-    private void setUpTaxRepositoryMock(){
+    private void setUpTaxRepositoryMock() {
         taxRepository = mock(TaxRepository.class);
 
         // Tax expected
@@ -683,7 +677,8 @@ class ServiceLayerTest {
 
         doReturn(Optional.of(tax)).when(taxRepository).findTaxRateByState("CA");
     }
-    private void setUpFeeRepositoryMock(){
+
+    private void setUpFeeRepositoryMock() {
         feeRepository = mock(FeeRepository.class);
 
         Fee fee = new Fee();
@@ -692,9 +687,6 @@ class ServiceLayerTest {
 
         doReturn(Optional.of(fee)).when(feeRepository).findByProductType("Game");
     }
-
-
-
 
 
 }

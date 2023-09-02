@@ -1,11 +1,8 @@
 package com.company.gamestore.controller;
 
-import com.company.gamestore.model.Game;
 import com.company.gamestore.model.Invoice;
 import com.company.gamestore.service.ServiceLayer;
-import com.company.gamestore.viewmodel.InvoiceViewModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.coyote.http11.upgrade.UpgradeServletOutputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +11,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.math.BigDecimal;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,7 +40,7 @@ class InvoiceControllerTest {
     }
 
     @Test
-    public void shouldCreateInvoice() throws Exception{
+    public void shouldCreateInvoice() throws Exception {
         Invoice invoice = new Invoice();
         invoice.setName("Johnny");
         invoice.setStreet("Random street address");
@@ -66,14 +60,14 @@ class InvoiceControllerTest {
     }
 
     @Test
-    public void shouldReadAllInvoices() throws Exception{
+    public void shouldReadAllInvoices() throws Exception {
         mockMvc.perform(get("/invoices"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void shouldReadInvoiceById() throws Exception{
+    public void shouldReadInvoiceById() throws Exception {
 
         mockMvc.perform(get("/invoices/1"))
                 .andDo(print())
@@ -88,14 +82,14 @@ class InvoiceControllerTest {
     }
 
     @Test
-    public void shouldReadByCustomerName() throws Exception{
+    public void shouldReadByCustomerName() throws Exception {
         mockMvc.perform(get("/invoices/name/johnny"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void shouldUpdateInvoice() throws Exception{
+    public void shouldUpdateInvoice() throws Exception {
         Invoice invoice = new Invoice();
         invoice.setName("Johnny");
 

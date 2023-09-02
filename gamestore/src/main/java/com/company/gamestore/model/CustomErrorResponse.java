@@ -9,13 +9,12 @@ public class CustomErrorResponse {
     private String errorMsg;
     private int status;
     String errorCode;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-mm-dd hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-mm-dd hh:mm:ss")
     LocalDateTime timestamp;
 
 
-
     //Two-argument constructor
-    public CustomErrorResponse(String errorCode, String errorMsg){
+    public CustomErrorResponse(String errorCode, String errorMsg) {
         this.errorCode = errorCode;
         this.errorMsg = errorMsg;
     }

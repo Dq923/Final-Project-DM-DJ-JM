@@ -1,40 +1,24 @@
 package com.company.gamestore.viewmodel;
 
 
-import org.hibernate.validator.constraints.Length;
-
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.Objects;
 
 public class InvoiceViewModel {
 
     private Integer id;
- //   @NotEmpty(message = "You must provide first and last name.")
     private String name;
-  //  @NotEmpty(message = "You must provide a street address.")
     private String street;
-  //  @NotEmpty(message = "You must provide a city.")
     private String city;
-   // @NotEmpty(message = "You must provide a two-character code for your state I.e. California -> CA")
-//    @Length(min = 2, max = 2, message= "You must provide a two-character code for your state i.e. California -> CA")
     private String state;
-  //  @NotEmpty(message = "You must provide a zipcode.")
-  //  @Length(min = 5, max = 10)
     private String zipcode;
- //   @NotEmpty(message = "You must provide an item type of Game, T-shirt, or Console.")
     private String itemType;
- //   @NotNull(message = "You must provide an item ID.")
-  //  @Digits(integer = 16, fraction = 0)
     private Integer itemId;
 
     private BigDecimal unitPrice;
 
-   // @Positive(message = "You must provide a quantity greater than zero.")
-  //  @NotNull(message = "You must provide a quantity.")
+    // @Positive(message = "You must provide a quantity greater than zero.")
+    //  @NotNull(message = "You must provide a quantity.")
     private Integer quantity;
     // consider other jsr 303 annotations for numbers such as min/max
     private BigDecimal subtotal;

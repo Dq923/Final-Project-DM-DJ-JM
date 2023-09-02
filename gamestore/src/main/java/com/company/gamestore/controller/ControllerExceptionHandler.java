@@ -40,8 +40,8 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(value = IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)    //Method level annotations
-    public ResponseEntity<CustomErrorResponse> handleGenericNotFoundException(IllegalArgumentException e){
-        CustomErrorResponse error = new CustomErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY.toString(), e.getMessage() );
+    public ResponseEntity<CustomErrorResponse> handleGenericNotFoundException(IllegalArgumentException e) {
+        CustomErrorResponse error = new CustomErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY.toString(), e.getMessage());
         error.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
         error.setTimestamp(LocalDateTime.now());
 

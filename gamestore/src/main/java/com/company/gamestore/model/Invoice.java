@@ -26,7 +26,7 @@ public class Invoice implements Serializable {
     private String street;
     @NotEmpty(message = "You must provide a city.")
     private String city;
-    @Length(min = 2, max = 2, message= "You must provide a two-character code for your state i.e. California -> CA")
+    @Length(min = 2, max = 2, message = "You must provide a two-character code for your state i.e. California -> CA")
     private String state;
 
     @Length(min = 5, max = 10, message = "You must provide a zipcode that is between 5 and 10 characters.")

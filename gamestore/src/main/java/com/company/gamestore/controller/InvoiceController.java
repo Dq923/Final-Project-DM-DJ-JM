@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class InvoiceController {
@@ -25,7 +24,7 @@ public class InvoiceController {
 
     @PutMapping("/invoices")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateInvoice(@RequestBody Invoice invoice){
+    public void updateInvoice(@RequestBody Invoice invoice) {
         if (!(serviceLayer.findInvoiceById(invoice.getInvoiceId()) == null)) {
             serviceLayer.updateInvoice(invoice);
         }
@@ -33,7 +32,7 @@ public class InvoiceController {
 
     @DeleteMapping("/invoices/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteInvoice(@PathVariable Integer id){
+    public void deleteInvoice(@PathVariable Integer id) {
         serviceLayer.deleteInvoiceById(id);
     }
 
@@ -51,8 +50,9 @@ public class InvoiceController {
 
     @GetMapping("/invoices/name/{name}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Invoice> getInvoiceByCustomerName(@PathVariable String name){return serviceLayer.findInvoicesByCustomerName(name);}
-
+    public List<Invoice> getInvoiceByCustomerName(@PathVariable String name) {
+        return serviceLayer.findInvoicesByCustomerName(name);
+    }
 
 
 // METHOD ONLY FOR CLEARING DATABASE WHEN TESTING W/ INSOMNIA

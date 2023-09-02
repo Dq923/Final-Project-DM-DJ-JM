@@ -64,7 +64,6 @@ public class ConsoleController {
     }
 
 
-
 // METHOD ONLY FOR CLEARING DATABASE WHEN TESTING W/ INSOMNIA
 //    @DeleteMapping("/consoles")
 //    @ResponseStatus(HttpStatus.NO_CONTENT)
